@@ -1,15 +1,14 @@
 from rest_framework import serializers
-from finance_core_api.models import Account
+from finance_core_api.models import Account, Resource
 
 
-class AccountSerializer(serializers.Serializer):
-
-    def update(self, instance, validated_data):
-        pass
-
-    def create(self, validated_data):
-        Account.objects.create(validated_data)
-
+class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = '__all__'
+        exclude = ['id']
+
+
+class ResourceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Resource
+        exclude = ['id']
