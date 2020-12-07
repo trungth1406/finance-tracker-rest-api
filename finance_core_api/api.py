@@ -20,8 +20,27 @@ class ResourceViewSet(viewsets.ModelViewSet):
     serializer_class = ResourceSerializer
     permission_classes = []
 
-    @action(methods=['get'], detail=True, url_path="related-accounts")
+
+class ResourceAccountViewSet(viewsets.ModelViewSet):
+    queryset = Resource.objects.all()
+    serializer_class = ResourceSerializer
+    permission_classes = []
+
     def get_related_accounts(self, request, pk):
         result = Account.objects.filter(fk_resource_id=pk)
         accounts = AccountSerializer(result, many=True)
         return Response(accounts.data)
+
+    def delete_account(self, request, *args, **kwargs):
+        account_id = request.GET['account_id']
+        if not isinstance(int(account_id), int):
+            return Response(data="Incorrect format for account_id", status=400)
+        else:
+            try:
+                resource_account = Account.objects.filter(fk_resource_id=kwargs['pk'])
+                instance = resource_account.get(id__exact=account_id)
+                instance.delete()
+                return Response()
+            except:
+                return Response(data="Account not found", status=500)
+
