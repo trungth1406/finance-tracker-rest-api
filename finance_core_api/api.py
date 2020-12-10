@@ -27,6 +27,7 @@ class ResourceAccountViewSet(viewsets.ModelViewSet):
     permission_classes = []
 
     def get_related_accounts(self, request, pk):
+        print("ISHTIS")
         result = Account.objects.filter(fk_resource_id=pk)
         accounts = AccountSerializer(result, many=True)
         return Response(accounts.data)
