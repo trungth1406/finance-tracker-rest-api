@@ -16,6 +16,12 @@ class AccountViewSet(viewsets.ModelViewSet):
     serializer_class = AccountSerializer
     permission_classes = []
 
+    @action(methods=['GET'], detail=True)
+    def related_transactions(self, request, pk, *args, **kwargs):
+        persisted_transactions = Transaction.objects.filter(fk_account_id=pk)
+        response = TransactionSerializer(persisted_transactions, many=True)
+        return Response(response.data, status=200)
+
 
 class ResourceViewSet(viewsets.ModelViewSet):
     queryset = Resource.objects.all()
